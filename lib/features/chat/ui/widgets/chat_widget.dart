@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gpt_app/core/theming/app_theme_cubit/app_theme_cubit.dart';
 import 'package:gpt_app/core/theming/colors.dart';
-import '../../../../core/utils/assets_manager.dart';
-import '../../../../core/utils/constants.dart';
 import 'text_widget.dart';
 
 class ChatWidget extends StatelessWidget {
@@ -19,27 +18,25 @@ class ChatWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(
+        left: chatIndex ==1 ?40.w: 0,
+        right: chatIndex ==1 ? 0: 40.w ,
+      ),
       decoration: BoxDecoration(
-        color: chatIndex == 1 ? ColorsManager.lightTealColor : ColorsManager.lightGrayColor,
+        color: chatIndex == 1 ? AppThemeCubit.isDarkMode ? ColorsManager.lightTealColor : Colors.indigo[200]
+            : AppThemeCubit.isDarkMode ? ColorsManager.lightGrayColor : Colors.indigo[600],
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),
-          bottomRight: Radius.circular(chatIndex == 1 ? 12 : 0),
-          bottomLeft: Radius.circular(chatIndex == 1 ? 0 : 12),
+          bottomRight: Radius.circular(chatIndex == 1 ? 0 : 12),
+          bottomLeft: Radius.circular(chatIndex == 1 ? 12 : 0),
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0.w),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /*Image.asset(
-              chatIndex == 1
-                  ? AssetsManager.userImage
-                  : AssetsManager.botImage,
-              height: 30,
-              width: 30,
-            ),*/
             const SizedBox(
               width: 8,
             ),
@@ -73,25 +70,6 @@ class ChatWidget extends StatelessWidget {
                               fontSize: 16),
                         ),
             ),
-            chatIndex == 1
-                ? const SizedBox.shrink()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(
-                        Icons.thumb_up_alt_outlined,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Icon(
-                        Icons.thumb_down_alt_outlined,
-                        color: Colors.white,
-                      )
-                    ],
-                  ),
           ],
         ),
       ),

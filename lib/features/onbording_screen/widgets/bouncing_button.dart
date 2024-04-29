@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gpt_app/core/theming/app_theme_cubit/app_theme_cubit.dart';
 
 import '../../../core/theming/colors.dart';
 
@@ -72,7 +73,7 @@ class _BouncingButtonState extends State<BouncingButton>
           width: widget.width ?? double.infinity,
           decoration: BoxDecoration(
             borderRadius:BorderRadius.circular(16.0),
-            color: widget.color ?? ColorsManager.mainColor,
+            color: widget.color ?? (AppThemeCubit.isDarkMode ? ColorsManager.lightTealColor : ColorsManager.mainColor),
             boxShadow: widget.applyShadow
                 ? [
                     BoxShadow(

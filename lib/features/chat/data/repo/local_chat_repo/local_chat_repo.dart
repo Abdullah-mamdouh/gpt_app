@@ -14,6 +14,7 @@ class LocalChatRepo {
 
   Future<void> addChat({required String chatName}) async{
     await _chatsBox.add(LocalChatModel(chatName));
+    openBox(chatName);
   }
 
   Future<ServiceResult<List<LocalChatModel?>>> fetchAllLocalChats() async {
@@ -55,6 +56,27 @@ class LocalChatRepo {
     openBox(chatName);
     await chatsBox!.add(message);
   }
+
+  clearChat(String chatName) async{
+    // openBox(chatName);
+    await chatsBox!.deleteFromDisk();
+  }
+
+  clearLocalChats() async {
+    //await fetchAllLocalChats();
+    try{
+      final localChats = await _chatsBox.values.toList();
+      for(int i =0;i< localChats.length; i++){
+        print(localChats[i]!.toJson().toString()+"ggggggggggggggggggggggggggggggg");
+        await clearChat(localChats[i]!.name);
+      }
+
+    } catch (errro) {
+      print("sfdadsssssssssssssssssssssssssss");
+    }
+
+  }
+
 
 }
 

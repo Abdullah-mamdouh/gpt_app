@@ -38,7 +38,7 @@ class Services {
                 textColor: Colors.white,
                 child: const Text('OK'),
                 onPressed: (){
-                  ChatCubit.get(context).emitAddChatsStates();
+                  // ChatCubit.get(context).emitAddChatStates();
                   context.pop();
                 },
               ),

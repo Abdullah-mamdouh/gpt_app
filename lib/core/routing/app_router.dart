@@ -1,5 +1,3 @@
-import 'package:gpt_app/features/chat/ui/screens/adding_chat.dart';
-import 'package:gpt_app/features/chat/ui/screens/all_chats_screen.dart';
 import 'package:gpt_app/features/chat/ui/screens/home_screen.dart';
 import 'package:gpt_app/features/chat/ui/screens/messages_screen.dart';
 import 'package:flutter/material.dart';
@@ -22,16 +20,6 @@ class AppRouter {
       case Routes.onboardingScreen:
         return MaterialPageRoute(
           builder: (_) => const OnboardingScreen(),
-        );
-
-      case Routes.addChatScreen:
-        return MaterialPageRoute(
-          builder: (_) => const AddingChat(),
-        );
-
-      case Routes.allChatsScreen:
-        return MaterialPageRoute(
-          builder: (_) => const AllChatsScreen(),
         );
 
       case Routes.homeScreen:

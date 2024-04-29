@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gpt_app/core/helpers/constants_strings.dart';
 import 'package:gpt_app/core/helpers/extensions.dart';
 import 'package:gpt_app/core/helpers/spacing.dart';
 import 'package:gpt_app/core/routing/routes.dart';
+import 'package:gpt_app/core/theming/app_theme_cubit/app_theme_cubit.dart';
 import 'package:gpt_app/core/theming/assets.dart';
 import 'package:gpt_app/core/theming/colors.dart';
 import 'package:gpt_app/core/theming/styles.dart';
@@ -22,6 +24,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  bool lightMode = false;
   @override
   void initState() {
     context.read<ChatCubit>().emitGetChatStates();
@@ -31,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black54,
+      backgroundColor: AppThemeCubit.isDarkMode?ColorsManager.lightBlackColor : Colors.indigo[300],//ColorsManager.lightTealColor,
       body: Container(
         child: Column(
           children: [
@@ -41,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => MessagesScreen(),
+                    builder: (_) => MessagesScreen(newChat: true,),
                   ),
                 );
                 // context.pushNamed(Routes.messagesScreen,);
@@ -122,21 +126,41 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: 20.h,
                                 ),
                                 horizontalSpace(15),
-                                Text(
-                                  '${chats[index]!.name}',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: ColorsManager.whiteColor),
+                                Container(
+                                  constraints: BoxConstraints(maxWidth: 200.w),
+                                  child: Text(
+                                    '${chats[index]!.name}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: ColorsManager.whiteColor),
+                                  ),
                                 ),
                               ],
                             ),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Image.asset(
-                                  AppAssets.arrowRightImage,
-                                  height: 20.h,
-                                ))
+                            Row(
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      context.read<ChatCubit>().emitRemoveChatStates(chats[index]!.name,);
+                                    },
+                                    icon: Image.asset(
+                                      //color: Colors.red,
+                                      AppAssets.clearImage,
+                                      height: 20.h,
+                                    )),
+                                //horizontalSpace(10),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: Image.asset(
+                                      AppAssets.arrowRightImage,
+                                      height: 20.h,
+                                    )),
+                              ],
+                            ),
+
                           ],
                         ),
                       );
@@ -150,8 +174,13 @@ class _HomeScreenState extends State<HomeScreen> {
               color: ColorsManager.whiteColor.withOpacity(0.5),
               thickness: 2.0,
             ),
-            IconAndTextRowWidget(
-                iconPath: AppAssets.clearImage, text: clearConversationsKey),
+            GestureDetector(
+              onTap: (){
+                ChatCubit.get(context).emitclearAllChatStates();
+              },
+              child: IconAndTextRowWidget(
+                  iconPath: AppAssets.clearImage, text: clearConversationsKey),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -176,14 +205,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
-            IconAndTextRowWidget(
-                iconPath: AppAssets.lightModeImage, text: lightModeKey),
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  lightMode = !lightMode;
+                });
+                AppThemeCubit.get(context).toggleTheme(!lightMode);
+                debugPrint("ddddddddddddddddddddddddd");
+              },
+              child: IconAndTextRowWidget(
+                  iconPath: AppAssets.lightModeImage, text: lightMode ? 'Dark Mode' : lightModeKey),
+            ),
             IconAndTextRowWidget(
                 iconPath: AppAssets.updatesToFAQImage, text: updatesFAQKey),
-            IconAndTextRowWidget(
-              iconPath: AppAssets.logoutImage,
-              text: logoutKey,
-              textStyle: TextStyles.font16RedMedium,
+            GestureDetector(
+              onTap: (){
+                context.pushNamed(Routes.onboardingScreen);
+              },
+              child: IconAndTextRowWidget(
+                iconPath: AppAssets.logoutImage,
+                text: logoutKey,
+                textStyle: TextStyles.font16RedMedium,
+              ),
             ),
             verticalSpace(20),
           ],

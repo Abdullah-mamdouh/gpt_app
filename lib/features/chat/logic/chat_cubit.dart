@@ -22,9 +22,9 @@ class ChatCubit extends Cubit<ChatState> {
   static List<ChatModel> chatList = [];
   final chatNameController = TextEditingController();
 
-  void addUserMessage({required ChatModel msg, required String chatName}) async{
-    chatList.add(msg);
+  addUserMessage({required ChatModel msg, required String chatName}) async{
     await localChatRepo.addMessage(chatName: chatName, message: msg);
+    emitGetChatMessagestates(chatName);
   }
 
   emitChatModelsStates() async {
@@ -46,6 +46,7 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   emitSendMessageStates(UserMessage message, String chatName) async {
+    addUserMessage(msg: ChatModel(message: message.message[0], index: 1), chatName: chatName);
     emit(const ChatState.loading());
     // if(await internetChecker.isConnected){
     final response = await chatDataRepo.sendMessageGPT(message);
@@ -63,14 +64,12 @@ class ChatCubit extends Cubit<ChatState> {
     //
     // }
   }
-  emitAddChatsStates() async {
-    print(chatNameController.text);
-    await localChatRepo.addChat(chatName: chatNameController.text);
-    await emitGetChatStates();
-  }
   emitAddChatStates(String chatname) async {
     print(chatNameController.text);
-    await localChatRepo.addChat(chatName: chatname);
+    await localChatRepo.addChat(chatName: chatname).whenComplete(() async{
+      await addUserMessage(msg: ChatModel(message: Message(content: chatname), index: 1), chatName: chatname);
+
+    });
     await emitGetChatStates();
   }
 
@@ -103,5 +102,19 @@ class ChatCubit extends Cubit<ChatState> {
         }, failure: (error) {
       emit(ChatState.error(error: error.errorModel.message ?? ''));
     });
+  }
+
+  emitRemoveChatStates(String chatName) async {
+    print(chatNameController.text);
+    await localChatRepo.clearChat(chatName);
+    // emitGetChatStates();
+    // await emitGetChatStates();
+  }
+
+  emitclearAllChatStates() async {
+    print(chatNameController.text);
+    await localChatRepo.clearLocalChats();
+    // emitGetChatStates();
+    // await emitGetChatStates();
   }
 }

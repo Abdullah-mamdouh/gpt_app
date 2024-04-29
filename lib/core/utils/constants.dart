@@ -7,13 +7,15 @@ Color scaffoldBackgroundColor = const Color(0xFF343541);
 Color cardColor = const Color(0xFF444654);
 // -------------------- App Font Family String -------------------------
 const String ralewayFontFamily = 'Raleway';
+// -------------------- Key of Theme at Local Data -------------------------
+const String themeKey = 'appTheme';
 // -------------------- Onboarding attribute -------------------------
 List attribute = [
   { 'iconPath': AppAssets.examplesImage,
     'title': examplesKey,
     'description': [explainQuantumKey,gotAnyCreativeKey,howDoHTTPKey],},
   { 'iconPath': AppAssets.capabilitiesImage,
-    'title': AppAssets.capabilitiesImage,
+    'title': capabilitiesKey,
     'description': [remembersWhatUserKey,allowsUserToProvideKey,trainedToDeclineKey],},
   { 'iconPath': AppAssets.limitationsImage,
     'title': limitationsKey,

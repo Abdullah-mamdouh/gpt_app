@@ -9,6 +9,8 @@ import 'package:hive/hive.dart';
 import '../../features/chat/data/models/user-message.dart';
 import '../../features/chat/data/repo/local_chat_repo/local_chat_repo.dart';
 import '../networking/api_service/dio_factory.dart';
+import '../theming/app_theme_cubit/app_theme_cubit.dart';
+import '../utils/constants.dart';
 
 final getIt = GetIt.instance;
 
@@ -22,11 +24,18 @@ Future<void> setupGetIt() async{
   Hive.registerAdapter(MessageAdapter());
   //box
   final chatsBox = await Hive.openBox<LocalChatModel?>(chatsKey);
+
   //repos
   LocalChatRepo(chatsBox: chatsBox);
 
   /// Dio
   Dio dio = DioFactory.getDio();
+
+  //Box of theme in hive local data
+  final appThemeBox = await Hive.openBox(themeKey);
+
+  //App theme app_theme_cubit
+  getIt.registerFactory(() => AppThemeCubit(themeBox: appThemeBox));
 
   /// chat repo
   getIt.registerLazySingleton(() => ChatApiRepo(dio));

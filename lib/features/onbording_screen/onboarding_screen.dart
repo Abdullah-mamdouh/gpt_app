@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gpt_app/core/helpers/constants_strings.dart';
 import 'package:gpt_app/core/helpers/extensions.dart';
 import 'package:gpt_app/core/routing/routes.dart';
+import 'package:gpt_app/core/theming/app_theme_cubit/app_theme_cubit.dart';
 import 'package:gpt_app/core/theming/colors.dart';
 import 'package:gpt_app/core/theming/styles.dart';
 import 'package:gpt_app/core/utils/constants.dart';
@@ -40,8 +41,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       height: 3.0.h,
       width: isActive ? 24.0.w : 24.0.w,
       decoration: BoxDecoration(
-        color:
-            isActive ? ColorsManager.lightTealColor : ColorsManager.lightGrayColor,
+        color: isActive
+            ? AppThemeCubit.isDarkMode
+                ? ColorsManager.lightTealColor
+                : Colors.indigo[500]
+            : AppThemeCubit.isDarkMode
+                ? ColorsManager.lightGrayColor
+                : ColorsManager.whiteColor,
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
     );
@@ -50,26 +56,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsManager.grayMedium,
+      // backgroundColor: AppThemeCubit.isDarkMode
+      //     ? ColorsManager.grayMedium
+      //     : ColorsManager.lightTealColor,
       body: SingleChildScrollView(
         child: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
           child: Container(
             padding: EdgeInsets.only(left: 20, right: 20),
-            // decoration: BoxDecoration(
-            //     color: Colors.black54,
-            //
-            // ),
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 20.0),
               child: Column(
-                //crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   verticalSpace(50),
-                  Image.asset(AppAssets.vectorGPTImage, height: 30.h,width: 30.w,fit: BoxFit.fill,),
+                  Image.asset(
+                    AppAssets.vectorGPTImage,
+                    height: 30.h,
+                    width: 30.w,
+                    fit: BoxFit.fill,
+                  ),
                   verticalSpace(30),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 60.w),
+                    padding: EdgeInsets.symmetric(horizontal: 70.w),
                     child: Text(
                       welcomeToChatGPTKey,
                       style: TextStyles.font20WhiteBold,
@@ -101,7 +109,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ),
                   ),
-
                   verticalSpace(40),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -109,15 +116,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   verticalSpace(20),
                   BouncingButton(
-                    color: ColorsManager.lightTealColor,
+                    color: AppThemeCubit.isDarkMode
+                        ? ColorsManager.lightTealColor
+                        : Colors.indigo[500],//ColorsManager.mainColor,
                     child: Text(
                       _currentPage == 2 ? letChatKey : nextKey,
                       style: TextStyles.font16WhiteBold,
                     ),
                     onPress: () {
-                      _currentPage !=2 ? setState(() {
-                        _currentPage = _currentPage + 1;
-                      }) : context.pushNamed(Routes.homeScreen);
+                      _currentPage != 2
+                          ? setState(() {
+                              _currentPage = _currentPage + 1;
+                            })
+                          : context.pushNamed(Routes.homeScreen);
                     },
                   ),
                 ],
